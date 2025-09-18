@@ -1,17 +1,20 @@
+
+import java.util.ArrayList;
+
 public class Paciente {
     private String nome;
     private String cpf;
     private int idade;
-    private String historicoConsultas;
-    private String historicoInternacoes;
+    private ArrayList<String> historicoConsultas;
+    private ArrayList<String> historicoInternacoes;
     public boolean temRegistroPlano;
 
     public Paciente(){
         this.nome = "";
         this.cpf = "";
         this.idade = 0;
-        this.historicoConsultas = "";
-        this.historicoInternacoes = "";
+        this.historicoConsultas = null;
+        this.historicoInternacoes = null;
         this.temRegistroPlano = false;
     }
 
@@ -39,19 +42,19 @@ public class Paciente {
         return idade;
     }
 
-    public void setHistoricoConsultas(String historicoConsultas){
+    public void setHistoricoConsultas(ArrayList<String> historicoConsultas){
         this.historicoConsultas = historicoConsultas;
     }
 
-    public String getHistoricoConsultas(){
+    public ArrayList<String> getHistoricoConsultas(){
         return historicoConsultas;
     }
 
-    public void setHistoricoInternacoes(String historicoInternacoes){
+    public void setHistoricoInternacoes(ArrayList<String> historicoInternacoes){
         this.historicoInternacoes = historicoInternacoes;
     }
 
-    public String getHistoricoInternacoes(){
+    public ArrayList<String> getHistoricoInternacoes(){
         return historicoInternacoes;
     }
 

@@ -1,10 +1,13 @@
+
+import java.util.ArrayList;
+
 public class Medico {
     private String nome;
     private int crm;
     private String especialidade;
     private int custoConsulta;
     private int custoInternacao;
-    private String agendaHorario;
+    private ArrayList<String> agendaHorario;
 
     public Medico(){
         this.nome = "";
@@ -12,7 +15,7 @@ public class Medico {
         this.especialidade = "";
         this.custoConsulta = 0;
         this.custoInternacao = 0;
-        this.agendaHorario = "";
+        this.agendaHorario = null;
     }
 
     public void setNome(String nome){
@@ -55,11 +58,11 @@ public class Medico {
         return custoInternacao;
     }
 
-    public void setAgendaHorario(String agendaHorario){
+    public void setAgendaHorario(ArrayList<String> agendaHorario){
         this.agendaHorario = agendaHorario;
     }
 
-    public String getAgendaHorario(){
+    public ArrayList<String> getAgendaHorario(){
         return agendaHorario;
     }
 }
