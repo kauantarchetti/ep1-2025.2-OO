@@ -1,10 +1,10 @@
-
+package entidades;
 import java.util.ArrayList;
 
 public class Medico {
     private String nome;
     private int crm;
-    private String especialidade;
+    private int especialidade;
     private int custoConsulta;
     private int custoInternacao;
     private ArrayList<String> agendaHorario;
@@ -12,7 +12,7 @@ public class Medico {
     public Medico(){
         this.nome = "";
         this.crm = 0;
-        this.especialidade = "";
+        this.especialidade = 0;
         this.custoConsulta = 0;
         this.custoInternacao = 0;
         this.agendaHorario = null;
@@ -34,11 +34,11 @@ public class Medico {
         return crm;
     }
 
-    public void setEspecialidade(String especialidade){
+    public void setEspecialidade(int especialidade){
         this.especialidade = especialidade;
     }
 
-    public String getEspecialidade(){
+    public int getEspecialidade(){
         return especialidade;
     }
 
@@ -64,6 +64,16 @@ public class Medico {
 
     public ArrayList<String> getAgendaHorario(){
         return agendaHorario;
+    }
+
+
+    public void exibirDadosMedico(){
+        System.out.println("Nome "+ nome);
+        System.out.println("Crm "+ crm);
+        System.out.println("Especialidade "+ especialidade);
+        System.out.println("Custo da consulta "+ custoConsulta);
+        System.out.println("Custo da internação "+ custoInternacao);
+        System.out.println("Agenda horário "+ agendaHorario);
     }
 }
 
