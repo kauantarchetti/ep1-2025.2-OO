@@ -47,8 +47,38 @@ public class medicoDAO {
 
     public void buscaPorEspecialidade(){
         this.entrada = new inputScanner();
+        String especialidadeText = null;
         System.out.println("Digite o número da especialidade que você deseja consultar: ");
-        
+        System.out.println("Opções: ");
+        System.out.println("0 -> Médico geral");
+        System.out.println("1 -> Ortopedista");
+        System.out.println("2 -> Cirurgião");
+        System.out.println("3 -> Pediatra");
+        System.out.println("4 -> Oftalmo");
+        System.out.println("5 -> Psiquiatra");
+        System.out.println("6 -> Dermatologista");
+        System.out.println("7 -> Cardiologista");
+        System.out.println("8 -> Ginecologista");
+        System.out.println("9 -> Urologista");
+        Integer especialidadeNum = entrada.nextNum();
+        switch(especialidadeNum){
+            case 0 -> especialidadeText = "Médigo geral";
+            case 1 -> especialidadeText = "Ortopedista";
+            case 2 -> especialidadeText = "Cirurgião";
+            case 3 -> especialidadeText = "Pediatra";
+            case 4 -> especialidadeText = "Oftalmo";
+            case 5 -> especialidadeText = "Psiquiatra";
+            case 6 -> especialidadeText = "Dermatologista";
+            case 7 -> especialidadeText = "Cardiologista";
+            case 8 -> especialidadeText = "Ginecologista";
+            case 9 -> especialidadeText = "Urologista";
+            default -> System.out.println("Digite uma opção válida");
+        }
+        for(Medico medico: listarMedicos()){
+            if(medico.getEspecialidade().equals(especialidadeText.intern())){
+                System.out.println("Médicos encontrados: "+ medico.getNome());
+            }
+        }
     }
     
     

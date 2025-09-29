@@ -38,7 +38,7 @@ public class pacienteDAO {
 
     public void buscaPorCpf(){
         this.entrada = new inputScanner();
-        System.out.println("Digite o cpf do paciente que você deseja consulta: ");
+        System.out.println("Digite o cpf do paciente que você deseja consultar: ");
         String cpfDigitado = entrada.nextText();
 
         for (Paciente paciente : listarPaciente()){
@@ -51,14 +51,49 @@ public class pacienteDAO {
     }
 
     public void buscaPorNome(){
-        
+        this.entrada = new inputScanner();
+        System.out.println("Digite o nome do paciente que você deseja consultar: ");
+        String nomePacienteDigitado = entrada.nextText();
+
+        for (Paciente paciente: listarPaciente()){
+            if(paciente.getNome().equals(nomePacienteDigitado.intern())){
+                System.out.println("Paciente encontrado: "+ paciente.getNome() + ";" + paciente.getCpf());
+                return;
+            }
+        }
+        System.out.println("Paciente não encontrado");
+    }
+
+    public void buscaPorPlanoDeSaude(){
+        this.entrada = new inputScanner();
+        String planoDeSaudePacienteText = null;
+        System.out.println("Digite o número correspondente ao Plano de saúde do paciente que você deseja consultar: ");
+        System.out.println("Opções: ");
+        System.out.println("0 -> Cassi");
+        System.out.println("1 -> Amil");
+        System.out.println("2 -> Porto Seguro");
+        System.out.println("3 -> Unimed");
+        System.out.println("4 -> Sulamerica");
+        System.out.println("5 -> Bradesco Saúde");
+        System.out.println("6 -> Saúde Caixa");
+        Integer planoDeSaudePacienteNum = entrada.nextNum();
+        switch(planoDeSaudePacienteNum){
+            case 0 -> planoDeSaudePacienteText = "Cassi";
+            case 1 -> planoDeSaudePacienteText = "Amil";
+            case 2 -> planoDeSaudePacienteText = "Porto Seguro";
+            case 3 -> planoDeSaudePacienteText = "Unimed";
+            case 4 -> planoDeSaudePacienteText = "Sulamerica";
+            case 5 -> planoDeSaudePacienteText = "Bradesco Saúde";
+            case 6 -> planoDeSaudePacienteText = "Saúde Caixa";
+            default -> System.out.println("Digite um número válido");
+        }
+        for (Paciente paciente: listarPaciente()){
+            if(paciente.getNomePlanoDeSaude().equals(planoDeSaudePacienteText.intern())){
+                System.out.println("Usúarios por plano de saúde encontrados: " + paciente.getNome());
+            }
+        }
+        }
     }
 
 
 
-
-
-
-
-
-}

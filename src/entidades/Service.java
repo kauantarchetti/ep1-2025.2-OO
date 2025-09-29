@@ -12,6 +12,7 @@ public class Service {
     private int planoDeSaudePaciente;
     private int escolhaMenu;
     private int escolhaPaciente;
+    private int escolhaMedico;
     private final Medico medico = new Medico();
     private final Paciente paciente = new Paciente();
     private final PlanoDeSaude planodesaude = new PlanoDeSaude();
@@ -142,13 +143,13 @@ public class Service {
     }
 
     public void menuAdm(){
-        this.leitorEntrada = new inputScanner();
-        this.escolhaMenu = leitorEntrada.nextNum();
         System.out.println("== Menu ADM ==");
         System.out.println("Escolha as configurações que deseja acessar: ");
         System.out.println("Opções: ");
         System.out.println("0 -> Configurações dos Pacientes");
         System.out.println("1 -> Configurações dos Médicos");
+        this.leitorEntrada = new inputScanner();
+        this.escolhaMenu = leitorEntrada.nextNum();
         switch(escolhaMenu){
             case 0:
             System.out.println("Entrou nas configurações de paciente");
@@ -161,10 +162,33 @@ public class Service {
             this.escolhaPaciente = leitorEntrada.nextNum();
             switch(escolhaPaciente){
                 case 0 -> System.out.println(pacientedaos.listarPaciente());
-                case 1 -> pacientedaos.
-                case 2 -> 
-                case 3 -> 
+                case 1 -> pacientedaos.buscaPorNome();
+                case 2 -> pacientedaos.buscaPorCpf();
+                case 3 -> pacientedaos.buscaPorPlanoDeSaude();
+                default -> System.out.println("Realize uma escolha válida");
             }
+            case 1:
+            System.out.println("Entrou nas configurações de médico");
+            System.out.println("Qual configuração deseja acessar: ");
+            System.out.println("Opções: ");
+            System.out.println("0 -> Listagem de Médicos");
+            System.out.println("1 -> Consulta por Nome");
+            System.out.println("2 -> Consultar por Crm");
+            System.out.println("3 -> Consultar por Especialidade");
+            System.out.println("4 -> Consultar se Plano De Saúde é aceito");
+            this.escolhaMedico = leitorEntrada.nextNum();
+            switch(escolhaMedico){
+                case 0 -> 
+                case 1 ->
+                case 2 ->
+                case 3 ->
+                case 4 -> 
+                default -> System.out.println("Digite uma opção válida");
+            }
+
+
+            default:
+            System.out.println("Digite uma opção válida");
         }
     }
 
