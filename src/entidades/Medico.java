@@ -4,7 +4,7 @@ import java.util.ArrayList;
 public class Medico {
     private String nome;
     private int crm;
-    private int especialidade;
+    private String especialidade;
     private int custoConsulta;
     private int custoInternacao;
     private ArrayList<String> agendaHorario;
@@ -12,7 +12,7 @@ public class Medico {
     public Medico(){
         this.nome = "";
         this.crm = 0;
-        this.especialidade = 0;
+        this.especialidade = "";
         this.custoConsulta = 0;
         this.custoInternacao = 0;
         this.agendaHorario = null;
@@ -34,11 +34,11 @@ public class Medico {
         return crm;
     }
 
-    public void setEspecialidade(int especialidade){
+    public void setEspecialidade(String especialidade){
         this.especialidade = especialidade;
     }
 
-    public int getEspecialidade(){
+    public String getEspecialidade(){
         return especialidade;
     }
 

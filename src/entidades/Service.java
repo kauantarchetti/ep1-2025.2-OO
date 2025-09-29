@@ -7,18 +7,19 @@ public class Service {
     
     private inputScanner leitorEntrada;
     private int opcao;
+    private int especialidadeEscolhida;
     private final Medico medico = new Medico();
     private final Paciente paciente = new Paciente();
     pacienteDAO pacientedaos = new pacienteDAO();
     medicoDAO medicodaos = new medicoDAO();
 
     public void exibirMenu(){
-        while(true) {System.out.println("== SISTEMA DE GERENCIAMENTO DE HOSPITALAR ==");
+        System.out.println("== SISTEMA DE GERENCIAMENTO DE HOSPITALAR ==");
         System.out.println("Opções:");
         System.out.println("Aperte 0 se for um médico");
         System.out.println("Aperte 1 se for um paciente");
         System.out.println("Aperte 2 se for um ADM");
-    }}
+    }
     
     public void lerEntrada(){
         this.leitorEntrada = new inputScanner();
@@ -27,8 +28,8 @@ public class Service {
         }
 
     public void menuMedico(){
-        medicodaos.criarArquivoMedico();
         this.leitorEntrada = new inputScanner();
+        this.especialidadeEscolhida = leitorEntrada.nextNum();
 
         System.out.println("=== Cadastro de médico ===");
 
@@ -42,18 +43,29 @@ public class Service {
         System.out.println("Quanto custa sua consulta?");
         medico.setCustoConsulta(leitorEntrada.nextNum());
         leitorEntrada.nextEspaco();
-
+        
         System.out.println("Qual a sua especialidade?");
         System.out.println("Opções: ");
-        medico.setEspecialidade(leitorEntrada.nextNum());
+        System.out.println("0 -> Médico geral");
+        System.out.println("1 -> Ortopedista");
+        System.out.println("2 -> Cirurgião");
+        System.out.println("3 -> Pediatra");
+        System.out.println("4 -> Oftalmo");
+        System.out.println("5 -> Psiquiatra");
+        System.out.println("6 -> Dermatologista");
+        System.out.println("7 -> Cardiologista");
+        System.out.println("8 -> Ginecologista");
+        System.out.println("9 -> Urologista");
+        
 
         System.out.println("Cadastro concluido com sucesso");
         medico.exibirDadosMedico();
         medicodaos.salvarMedico(medico);
+
+        medicodaos.salvarMedico(medico);
     }
          
     public void menuPaciente(){
-        pacientedaos.criarArquivoPaciente();
         this.leitorEntrada = new inputScanner();
         System.out.println("=== Cadastro de Paciente ===");
 
@@ -77,8 +89,9 @@ public class Service {
         System.out.println("Listagem de Pacientes");
         System.out.println(pacientedaos.listarPaciente());
 
-        System.out.println("Listagem de Medicos");
-        System.out.println(medicodaos.listarMedicos());
+
+        System.out.println("Busca por CRM médico: ");
+        medicodaos.buscaPorCrm();
     }
 
     public void escolherMenu(){

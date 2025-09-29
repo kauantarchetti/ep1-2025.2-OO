@@ -9,6 +9,7 @@ public class Paciente {
     private ArrayList<String> historicoConsultas;
     private ArrayList<String> historicoInternacoes;
     public boolean temRegistroPlano;
+    
 
     public Paciente(){
         this.nome = "";
@@ -66,4 +67,15 @@ public class Paciente {
     public boolean getTemRegistroPlano(){
         return temRegistroPlano;
     }
-}
+
+    @Override
+    public String toString() {
+        return "Paciente{" +
+                "nome='" + nome + '\'' +
+                ", cpf='" + cpf + '\'' +
+                ", idade=" + idade +
+                ", temRegistroPlano=" + temRegistroPlano +
+                ", historicoConsultas=" + historicoConsultas +
+                ", historicoInternacoes=" + historicoInternacoes +
+                '}';
+}}

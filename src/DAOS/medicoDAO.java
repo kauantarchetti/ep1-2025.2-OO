@@ -2,50 +2,56 @@ package DAOS;
 import entidades.Medico;
 import java.io.*;
 import java.util.*;
-
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import entidades.inputScanner;
 
 public class medicoDAO {
-    public void criarArquivoMedico(){
-        try {
-        File myFile = new File("medicos.txt");
-        if(myFile.createNewFile()){
-            System.out.println("Arquivo criado: "+ myFile.getName());
-        } else {
-            System.out.println("O Arquivo já existe: "+ myFile.getName());
-        }
-    } catch (IOException e) {
-        System.out.println("Erro ao criar o arquivo");
-    }
-    }
+    private static final String FILE_NAME = "medicos.json";
+    private Gson gson = new Gson();
+    private inputScanner entrada;
+
 
     public void salvarMedico(Medico medico){
-        try (FileWriter writer = new FileWriter("medicos.txt",true)) {
-            writer.write(medico.getNome() + ";" + medico.getCrm() + ";"+ medico.getCustoConsulta() + ";" +  medico.getCustoInternacao() + ";" + medico.getEspecialidade() + System.lineSeparator());
-            
+        List<Medico> medicos = listarMedicos();
+        medicos.add(medico);
+
+        try (FileWriter writer = new FileWriter(FILE_NAME)) {
+            gson.toJson(medicos, writer);
         } catch (IOException e) {
-            System.out.println("Erro ao salvar paciente" + e.getMessage());
+            System.out.println("Erro ao salvar médico" + e.getMessage());
     }}
 
     public List<Medico> listarMedicos(){
         List<Medico> medicos = new ArrayList<>();
-        try(BufferedReader reader = new BufferedReader(new FileReader("medicos.txt"))) {
-            String linha;
-            while ((linha = reader.readLine()) != null){
-                String[] partes = linha.split(";");
-                if (partes.length == 5){
-                    Medico m = new Medico();
-                    m.setNome(partes[0]);
-                    m.setCrm(Integer.parseInt(partes[1]));
-                    m.setCustoConsulta(Integer.parseInt(partes[2]));
-                    m.setCustoInternacao(Integer.parseInt(partes[3]));
-                    m.setEspecialidade(Integer.parseInt(partes[4]));
-                    medicos.add(m);
-                }
-            }
+        try (Reader reader = new FileReader(FILE_NAME)){
+            return gson.fromJson(reader, new TypeToken<List<Medico>>(){}.getType());
+        
         } catch(IOException e){
-            System.out.println("Falha ao listar medicos: " + e.getMessage());
-        }
-        return medicos;
+            return new ArrayList<>();
+        }}
+    
+    public void  buscaPorCrm(){
+        this.entrada = new inputScanner();
+        System.out.println("Digite o CRM Do médico que você deseja consultar: ");
+        int crmDigitado = entrada.nextNum();
 
-}}
+        for (Medico medico : listarMedicos()){
+            if(medico.getCrm() == crmDigitado) {
+                System.out.println("Médico encontrado: "+ medico.getNome());
+                return;
+            }
+        }
+        System.out.println("Médico não encontrado");
+    }
+
+    public void buscaPorEspecialidade(){
+
+    }
+    
+    
+    
+    
+    
+    }
 

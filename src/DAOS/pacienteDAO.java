@@ -2,25 +2,20 @@ package DAOS;
 import entidades.Paciente;
 import java.io.*;
 import java.util.*;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import java.lang.reflect.Type;
 
-public class pacienteDAO implements Serializable {  
-    public void criarArquivoPaciente(){
-    try {
-        File myFile = new File("pacientes.txt");
-        if(myFile.createNewFile()){
-            System.out.println("Arquivo criado: "+ myFile.getName());
-        } else {
-            System.out.println("O Arquivo já existe: "+ myFile.getName());
-        }
-    } catch (IOException e) {
-        System.out.println("Erro ao criar o arquivo");
-    }
-    }
+public class pacienteDAO {  
+    private static final String FILE_NAME = "pacientes.json";
+    private Gson gson = new Gson();
 
     public void salvarPaciente(Paciente paciente){
-        try (FileWriter writer = new FileWriter("pacientes.txt",true)) {
-            writer.write(paciente.getNome() + ";" + paciente.getCpf()+ ";"+ paciente.getIdade()+ ";" + paciente.getTemRegistroPlano() + System.lineSeparator());
-            
+        List<Paciente> pacientes = listarPaciente();
+        pacientes.add(paciente);
+
+        try (FileWriter writer = new FileWriter(FILE_NAME)) {
+            gson.toJson(pacientes, writer);
         } catch (IOException e) {
             System.out.println("Erro ao salvar paciente" + e.getMessage());
         }
@@ -28,22 +23,12 @@ public class pacienteDAO implements Serializable {
 
     public List<Paciente> listarPaciente(){
         List<Paciente> pacientes = new ArrayList<>();
-        try(BufferedReader reader = new BufferedReader(new FileReader("pacientes.txt"))) {
-            String linha;
-            while ((linha = reader.readLine()) != null){
-                String[] partes = linha.split(";");
-                if (partes.length == 4){
-                    Paciente p = new Paciente();
-                    p.setNome(partes[0]);
-                    p.setCpf(partes[1]);
-                    p.setIdade(Integer.parseInt(partes[2]));
-                    p.setTemRegistroPlano(Boolean.parseBoolean(partes[3]));
-                    pacientes.add(p);
-                }
-            }
-        } catch(IOException e){
-            System.out.println("Falha ao listar pacientes: " + e.getMessage());
+        try (Reader reader = new FileReader(FILE_NAME)){
+            Type pacienteListType = new TypeToken<List<Paciente>>() {}.getType();
+            return gson.fromJson(reader, pacienteListType);
         }
-        return pacientes;
-    }
-}
+
+        catch(IOException e){
+            return new ArrayList<>();
+        }
+    }}
