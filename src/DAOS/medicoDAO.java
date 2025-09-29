@@ -46,7 +46,9 @@ public class medicoDAO {
     }
 
     public void buscaPorEspecialidade(){
-
+        this.entrada = new inputScanner();
+        System.out.println("Digite o número da especialidade que você deseja consultar: ");
+        
     }
     
     

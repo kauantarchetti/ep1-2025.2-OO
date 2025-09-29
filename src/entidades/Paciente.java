@@ -9,6 +9,8 @@ public class Paciente {
     private ArrayList<String> historicoConsultas;
     private ArrayList<String> historicoInternacoes;
     public boolean temRegistroPlano;
+    private String nomePlanoDeSaude;
+    
     
 
     public Paciente(){
@@ -17,8 +19,8 @@ public class Paciente {
         this.idade = 0;
         this.historicoConsultas = null;
         this.historicoInternacoes = null;
-        this.temRegistroPlano = false;
-    }
+        this.nomePlanoDeSaude = null;    
+        }
 
     public void setNome(String nome){
         this.nome = nome;
@@ -68,14 +70,23 @@ public class Paciente {
         return temRegistroPlano;
     }
 
+    public void setNomePlanoDeSaude(String nomePlanoDeSaude){
+        this.nomePlanoDeSaude = nomePlanoDeSaude;
+    }
+
+    public String getNomePlanoDeSaude(){
+        return nomePlanoDeSaude;
+    }
+
     @Override
     public String toString() {
-        return "Paciente{" +
+        return "{" +
                 "nome='" + nome + '\'' +
                 ", cpf='" + cpf + '\'' +
                 ", idade=" + idade +
-                ", temRegistroPlano=" + temRegistroPlano +
+                ", Nome Plano de Saude" + nomePlanoDeSaude +
                 ", historicoConsultas=" + historicoConsultas +
                 ", historicoInternacoes=" + historicoInternacoes +
+                ", tem plano de saude=" + temRegistroPlano +
                 '}';
 }}

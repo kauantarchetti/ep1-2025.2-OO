@@ -8,6 +8,7 @@ public class Medico {
     private int custoConsulta;
     private int custoInternacao;
     private ArrayList<String> agendaHorario;
+    private ArrayList<Integer> planosAceitos;
 
     public Medico(){
         this.nome = "";
@@ -16,6 +17,7 @@ public class Medico {
         this.custoConsulta = 0;
         this.custoInternacao = 0;
         this.agendaHorario = null;
+        this.planosAceitos = null;
     }
 
     public void setNome(String nome){
@@ -32,6 +34,14 @@ public class Medico {
 
     public int getCrm(){
         return crm;
+    }
+
+    public void setPlanosAceitos(ArrayList<Integer> planosAceitos){
+        this.planosAceitos = planosAceitos;
+    }
+
+    public ArrayList<Integer> getPlanosAceitos(){
+        return planosAceitos;
     }
 
     public void setEspecialidade(String especialidade){
