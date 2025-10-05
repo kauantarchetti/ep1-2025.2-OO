@@ -1,5 +1,7 @@
 package entidades;
-import java.util.ArrayList;
+import java.lang.reflect.Array;
+import java.util.*;
+import java.time.*;
 
 public class Medico {
     private String nome;
@@ -7,8 +9,8 @@ public class Medico {
     private String especialidade;
     private int custoConsulta;
     private int custoInternacao;
-    private ArrayList<String> agendaHorario;
-    private ArrayList<Integer> planosAceitos;
+    private List<LocalDateTime> agendaHorario;
+    private final ArrayList<Integer> planosAceitos;
 
     public Medico(){
         this.nome = "";
@@ -37,7 +39,9 @@ public class Medico {
     }
 
     public void setPlanosAceitos(ArrayList<Integer> planosAceitos){
-        this.planosAceitos = planosAceitos;
+        List<String> nomesPlanos = Array.asList(
+        "Cassi", "Amil", "Porto Seguro", "Unimed", "Sulamerica", "Bradesco Saúde", "Saúde Caixa" 
+        );
     }
 
     public ArrayList<Integer> getPlanosAceitos(){
@@ -69,10 +73,18 @@ public class Medico {
     }
 
     public void setAgendaHorario(ArrayList<String> agendaHorario){
-        this.agendaHorario = agendaHorario;
+        this.agendaHorario = new ArrayList<>();
     }
 
-    public ArrayList<String> getAgendaHorario(){
+    public void adicionarHorarioDisponivel(LocalDateTime horario){
+        agendaHorario.add(horario);
+    }
+
+    public void removerHorarioDisponivel(LocalDateTime horario){
+        agendaHorario.remove(horario);
+    }
+
+    public List<LocalDateTime> getAgendaHorario(){
         return agendaHorario;
     }
 

@@ -78,12 +78,31 @@ public class medicoDAO {
             if(medico.getEspecialidade().equals(especialidadeText.intern())){
                 System.out.println("Médicos encontrados: "+ medico.getNome());
             }
+            else{
+                System.out.println("Médico não encontrado");
+            }
         }
     }
     
-    
-    
-    
-    
+    public void buscaPorNomeMedico(){
+        this.entrada = new inputScanner();
+        System.out.println("Digite o nome do médico que você deseja consultar: ");
+        String nomeMedicoProcura = entrada.nextText();
+
+        for(Medico medico: listarMedicos()){
+            if(medico.getNome().equals(nomeMedicoProcura)){
+                System.out.println("Médico encontrado: "+ medico.getNome() + " Crm " + ":" + medico.getCrm());
+            }else{
+                System.out.println("Médico não encontrado");
+            }
+        }
     }
+    
+    public void buscaPorPlanoDeSaude(){
+        
+            
+        }
+    }
+    
+
 

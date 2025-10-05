@@ -2,6 +2,10 @@ package entidades;
 
 import DAOS.medicoDAO;
 import DAOS.pacienteDAO;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
+
+
 
 public class Service {
     
@@ -13,6 +17,8 @@ public class Service {
     private int escolhaMenu;
     private int escolhaPaciente;
     private int escolhaMedico;
+    private int entradaRegistroPlano;
+    private int querPlanoDeSaude;
     private final Medico medico = new Medico();
     private final Paciente paciente = new Paciente();
     private final PlanoDeSaude planodesaude = new PlanoDeSaude();
@@ -47,8 +53,9 @@ public class Service {
         leitorEntrada.nextEspaco();
 
         System.out.println("Quanto custa sua consulta?");
+        medico.setCustoConsulta(leitorEntrada.nextNum());
         leitorEntrada.nextEspaco();
-        
+      
         System.out.println("Qual a sua especialidade?");
         System.out.println("Opções: ");
         System.out.println("0 -> Médico geral");
@@ -75,30 +82,62 @@ public class Service {
             case 7 -> medico.setEspecialidade("Cardiologista");
             case 8 -> medico.setEspecialidade("Ginecologista");
             case 9 -> medico.setEspecialidade("Urologista");
-            default -> System.out.println("Opção inválida");
+            default -> {System.out.println("Digite uma opção válida"); this.especialidadeEscolhida = leitorEntrada.nextNum(); System.out.println("Você escolheu a especialidade "+ especialidadeEscolhida);}
         }
 
+        List<Integer> listaPlanosMedico = new ArrayList<>();
+        this.leitorEntrada = new inputScanner();
+        List<String> planosAceitos = new ArrayList<>();
+        List<String> nomesPlanos = new ArrayList<>();
         System.out.println("Quais planos de saúde você atende?");
+        System.out.println("Opções: ");
+        System.out.println("0 -> Cassi");
+        System.out.println("1 -> Amil");
+        System.out.println("2 -> Porto Seguro");
+        System.out.println("3 -> Unimed");
+        System.out.println("4 -> Sulamerica");
+        System.out.println("5 -> Bradesco Saúde");
+        System.out.println("6 -> Saúde Caixa");
+        System.out.println("Digite o 7 para parar");
 
+        while(true){
+            int valor = leitorEntrada.nextNum();
+            if (valor == 7) break;
+            if (valor >= 0  && valor < nomesPlanos.size()) {
+                planosAceitos.add(nomesPlanos.get(valor));
+            } else {
+                System.out.println("Opção Inválida, Tente Novamente");
+            }
+         }
+         
+        this.leitorEntrada = new inputScanner();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+        System.out.println("Quantos horários deseja cadastrar como médico?");
+        Integer quantidade = leitorEntrada.nextNum();
+
+        for (int i =0; i < quantidade; i++){
+            System.out.println("Digite o dia disponível (Formato dd)");
+            String horarioDisponivel = leitorEntrada.nextText();
+
+            
+        }
         
-
         System.out.println("Cadastro concluido com sucesso");
         medico.exibirDadosMedico();
-        medicodaos.salvarMedico(medico);
-
         medicodaos.salvarMedico(medico);
     }
          
     public void menuPaciente(){
         this.leitorEntrada = new inputScanner();
-        this.temPlanoDeSaudePaciente = leitorEntrada.nextNum();
         System.out.println("=== Cadastro de Paciente ===");
 
         System.out.println("Tem plano de saúde?");
         System.out.println("0 -> Sim");
         System.out.println("1 -> Não");
+        this.temPlanoDeSaudePaciente = leitorEntrada.nextNum();
         switch(temPlanoDeSaudePaciente){
             case 0:
+                paciente.setTemRegistroPlano(true);
                 System.out.println("Qual seu plano de saúde?");
                 System.out.println("Opções: ");
                 System.out.println("0 -> Cassi");
@@ -119,9 +158,22 @@ public class Service {
                     case 5 -> planodesaude.setNome("Bradesco Saúde");
                     case 6 -> planodesaude.setNome("Saúde Caixa");
                 }
+                System.out.println("Qual o seu número de registro do plano?");
+                this.leitorEntrada = new inputScanner();
+                this.entradaRegistroPlano = leitorEntrada.nextNum();
+                leitorEntrada.nextEspaco();
+                break;
                 
             case 1:
+            paciente.setTemRegistroPlano(false);
             System.out.println("Deseja fazer um plano de saúde?");
+            System.out.println("0 -> Sim");
+            System.out.println("1 -> Não");
+            this.querPlanoDeSaude = leitorEntrada.nextNum();
+            leitorEntrada.nextEspaco();
+
+
+
             default:
             System.out.println("Digite uma opção válida");
         }
@@ -165,7 +217,7 @@ public class Service {
                 case 1 -> pacientedaos.buscaPorNome();
                 case 2 -> pacientedaos.buscaPorCpf();
                 case 3 -> pacientedaos.buscaPorPlanoDeSaude();
-                default -> System.out.println("Realize uma escolha válida");
+                default -> System.out.println("Digite uma opção válida");
             }
             case 1:
             System.out.println("Entrou nas configurações de médico");
@@ -178,12 +230,12 @@ public class Service {
             System.out.println("4 -> Consultar se Plano De Saúde é aceito");
             this.escolhaMedico = leitorEntrada.nextNum();
             switch(escolhaMedico){
-                case 0 -> 
-                case 1 ->
-                case 2 ->
-                case 3 ->
-                case 4 -> 
-                default -> System.out.println("Digite uma opção válida");
+                case 0 -> medicodaos.listarMedicos();
+                case 1 -> medicodaos.buscaPorNomeMedico();
+                case 2 -> medicodaos.buscaPorCrm();
+                case 3 -> medicodaos.buscaPorEspecialidade();
+                case 4 -> medicodaos.buscaPorPlanoDeSaude();
+                default -> menuAdm();
             }
 
 
