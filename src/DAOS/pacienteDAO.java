@@ -25,10 +25,10 @@ public class pacienteDAO {
     }
 
     public List<Paciente> listarPaciente(){
-        List<Paciente> pacientes = new ArrayList<>();
         try (Reader reader = new FileReader(FILE_NAME)){
             Type pacienteListType = new TypeToken<List<Paciente>>() {}.getType();
-            return gson.fromJson(reader, pacienteListType);
+            List<Paciente> pacientes = gson.fromJson(reader, pacienteListType);
+            return pacientes != null ? pacientes : new ArrayList<>();
         }
 
         catch(IOException e){
@@ -42,7 +42,7 @@ public class pacienteDAO {
         String cpfDigitado = entrada.nextText();
 
         for (Paciente paciente : listarPaciente()){
-            if(paciente.getCpf().equals(cpfDigitado.intern())){
+            if(paciente.getCpf().equals(cpfDigitado)){
                 System.out.println("Paciente encontrado: "+ paciente.getNome());
                 return;
             }
@@ -56,7 +56,7 @@ public class pacienteDAO {
         String nomePacienteDigitado = entrada.nextText();
 
         for (Paciente paciente: listarPaciente()){
-            if(paciente.getNome().equals(nomePacienteDigitado.intern())){
+            if(paciente.getNome().equals(nomePacienteDigitado)){
                 System.out.println("Paciente encontrado: "+ paciente.getNome() + ";" + paciente.getCpf());
                 return;
             }
@@ -85,12 +85,20 @@ public class pacienteDAO {
             case 4 -> planoDeSaudePacienteText = "Sulamerica";
             case 5 -> planoDeSaudePacienteText = "Bradesco Saúde";
             case 6 -> planoDeSaudePacienteText = "Saúde Caixa";
-            default -> System.out.println("Digite um número válido");
-        }
-        for (Paciente paciente: listarPaciente()){
-            if(paciente.getNomePlanoDeSaude().equals(planoDeSaudePacienteText.intern())){
-                System.out.println("Usúarios por plano de saúde encontrados: " + paciente.getNome());
+            default -> {
+                System.out.println("Digite um número válido");
+                return;
             }
+        }
+        boolean encontrou = false;
+        for (Paciente paciente: listarPaciente()){
+            if(planoDeSaudePacienteText.equals(paciente.getNomePlanoDeSaude())){
+                System.out.println("Usuários por plano de saúde encontrados: "+ paciente.getNome());
+                encontrou = true;
+            }
+        }
+        if(!encontrou){
+            System.out.println("Nenhum paciente encontrado para o plano informado");
         }
         }
     }

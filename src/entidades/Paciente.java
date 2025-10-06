@@ -17,9 +17,9 @@ public class Paciente {
         this.nome = "";
         this.cpf = "";
         this.idade = 0;
-        this.historicoConsultas = null;
-        this.historicoInternacoes = null;
-        this.nomePlanoDeSaude = null;    
+        this.historicoConsultas = new ArrayList<>();
+        this.historicoInternacoes = new ArrayList<>();
+        this.nomePlanoDeSaude = "";    
         }
 
     public void setNome(String nome){
@@ -84,9 +84,9 @@ public class Paciente {
                 "nome='" + nome + '\'' +
                 ", cpf='" + cpf + '\'' +
                 ", idade=" + idade +
-                ", Nome Plano de Saude" + nomePlanoDeSaude +
+                ", NomePlanoDeSaude" + nomePlanoDeSaude +
                 ", historicoConsultas=" + historicoConsultas +
                 ", historicoInternacoes=" + historicoInternacoes +
-                ", tem plano de saude=" + temRegistroPlano +
+                ", TemplanoDeSaude=" + temRegistroPlano +
                 '}';
 }}

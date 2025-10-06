@@ -1,7 +1,6 @@
 package entidades;
-import java.lang.reflect.Array;
-import java.util.*;
 import java.time.*;
+import java.util.*;
 
 public class Medico {
     private String nome;
@@ -9,8 +8,8 @@ public class Medico {
     private String especialidade;
     private int custoConsulta;
     private int custoInternacao;
-    private List<LocalDateTime> agendaHorario;
-    private final ArrayList<Integer> planosAceitos;
+    private final List<LocalDateTime> agendaHorario;
+    private final List<String> planosAceitos;
 
     public Medico(){
         this.nome = "";
@@ -18,8 +17,8 @@ public class Medico {
         this.especialidade = "";
         this.custoConsulta = 0;
         this.custoInternacao = 0;
-        this.agendaHorario = null;
-        this.planosAceitos = null;
+        this.agendaHorario = new ArrayList<>();
+        this.planosAceitos = new ArrayList<>();
     }
 
     public void setNome(String nome){
@@ -38,14 +37,15 @@ public class Medico {
         return crm;
     }
 
-    public void setPlanosAceitos(ArrayList<Integer> planosAceitos){
-        List<String> nomesPlanos = Array.asList(
-        "Cassi", "Amil", "Porto Seguro", "Unimed", "Sulamerica", "Bradesco Saúde", "Saúde Caixa" 
-        );
+    public void setPlanosAceitos(List<String> planosAceitos){
+        this.planosAceitos.clear();
+        if (planosAceitos != null){
+            this.planosAceitos.addAll(planosAceitos);
+        }
     }
 
-    public ArrayList<Integer> getPlanosAceitos(){
-        return planosAceitos;
+    public List<String> getPlanosAceitos(){
+        return new ArrayList<>(planosAceitos);
     }
 
     public void setEspecialidade(String especialidade){
@@ -72,8 +72,11 @@ public class Medico {
         return custoInternacao;
     }
 
-    public void setAgendaHorario(ArrayList<String> agendaHorario){
-        this.agendaHorario = new ArrayList<>();
+    public void setAgendaHorario(List<LocalDateTime> agendaHorario){
+        this.agendaHorario.clear();
+        if(agendaHorario != null){
+            this.agendaHorario.addAll(agendaHorario);
+        }
     }
 
     public void adicionarHorarioDisponivel(LocalDateTime horario){
@@ -96,6 +99,16 @@ public class Medico {
         System.out.println("Custo da consulta "+ custoConsulta);
         System.out.println("Custo da internação "+ custoInternacao);
         System.out.println("Agenda horário "+ agendaHorario);
+    }
+
+    @Override
+    public String toString() {
+        return "Medico{" +
+        "nome='" + nome + '\'' +
+        ", crm=" + crm + ", especialidade='" + especialidade + '\'' +
+        ", custoInternacao=" + custoInternacao +
+        ", agendaHorario=" + agendaHorario +
+        ", planosAceitos=" + planosAceitos + '}';
     }
 }
 

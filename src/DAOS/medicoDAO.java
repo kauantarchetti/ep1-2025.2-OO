@@ -20,16 +20,17 @@ public class medicoDAO {
             gson.toJson(medicos, writer);
         } catch (IOException e) {
             System.out.println("Erro ao salvar médico" + e.getMessage());
-    }}
+        }
+    }
 
     public List<Medico> listarMedicos(){
-        List<Medico> medicos = new ArrayList<>();
         try (Reader reader = new FileReader(FILE_NAME)){
-            return gson.fromJson(reader, new TypeToken<List<Medico>>(){}.getType());
-        
+            List<Medico> medicos = gson.fromJson(reader, new TypeToken<List<Medico>>(){}.getType());
+            return medicos != null ? medicos : new ArrayList<>();
         } catch(IOException e){
             return new ArrayList<>();
-        }}
+        }
+    }
     
     public void  buscaPorCrm(){
         this.entrada = new inputScanner();
@@ -74,13 +75,21 @@ public class medicoDAO {
             case 9 -> especialidadeText = "Urologista";
             default -> System.out.println("Digite uma opção válida");
         }
+        if(especialidadeText == null){
+            return;
+        }
+        boolean encontrou = false;
+
         for(Medico medico: listarMedicos()){
-            if(medico.getEspecialidade().equals(especialidadeText.intern())){
+            if(medico.getEspecialidade().equals(especialidadeText)){
                 System.out.println("Médicos encontrados: "+ medico.getNome());
             }
             else{
-                System.out.println("Médico não encontrado");
+                encontrou = true;
             }
+        }
+        if(!encontrou){
+            System.out.println("Médico não encontrado");
         }
     }
     
@@ -93,16 +102,41 @@ public class medicoDAO {
             if(medico.getNome().equals(nomeMedicoProcura)){
                 System.out.println("Médico encontrado: "+ medico.getNome() + " Crm " + ":" + medico.getCrm());
             }else{
-                System.out.println("Médico não encontrado");
+                return;
             }
         }
-    }
+        System.out.println("Médio não encontrado");
     
-    public void buscaPorPlanoDeSaude(){
-        
-            
+    
+        this.entrada = new inputScanner();
+        System.out.println("Digite o número do plano de saúde que deseja consultar: ");
+        System.out.println("Opções: ");
+        System.out.println("0 -> Cassi");
+        System.out.println("1 -> Amil");
+        System.out.println("2 -> Porto Seguro");
+        System.out.println("3 -> Unimed");
+        System.out.println("4 -> Sulamerica");
+        System.out.println("5 -> Bradesco Saúde");
+        System.out.println("6 -> Saúde Caixa");
+        Integer planoEscolhido = entrada.nextNum();
+        List<String> planos = Arrays.asList(
+            "Cassi", "Amil", "Porto Seguro", "Unimed", "Sulamerica", "Bradesco Saúde", "Saúde Caixa"
+        );
+        if(planoEscolhido < 0 || planoEscolhido >= planos.size()){
+            System.out.println("Digite um número válido");
+            return;
         }
-    }
-    
+        String planoTexto = planos.get(planoEscolhido);
+        boolean encontrou = false;
+        for(Medico medico: listarMedicos()){
+            if(medico.getPlanosAceitos().contains(planoTexto)){
+                System.out.println("Médico encontrado: "+ medico.getNome());
+                encontrou = true;
+            }
+        }
+        if(!encontrou){
+            System.out.println("Nenhum médico encontrado para o plano informado");
+        }
+    }}
 
 

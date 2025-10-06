@@ -2,6 +2,8 @@ package entidades;
 
 import DAOS.medicoDAO;
 import DAOS.pacienteDAO;
+
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
@@ -68,14 +70,20 @@ public class Service {
         System.out.println("7 -> Cardiologista");
         System.out.println("8 -> Ginecologista");
         System.out.println("9 -> Urologista");
-        this.especialidadeEscolhida = leitorEntrada.nextNum();
+        while (true){
+            this.especialidadeEscolhida = leitorEntrada.nextNum();
+            if (especialidadeEscolhida >= 0 && especialidadeEscolhida <= 9){
+                break;
+            }
+            System.out.println("Digite uma opção válida");
+        }
         System.out.println("Você escolheu a especialidade "+ especialidadeEscolhida);
 
         switch(especialidadeEscolhida){
             case 0 -> medico.setEspecialidade("Médico geral");
             case 1 -> medico.setEspecialidade("Ortopedista");
             case 2 -> medico.setEspecialidade("Cirurgião");
-            case 3 -> medico.setEspecialidade("Pediatria");
+            case 3 -> medico.setEspecialidade("Pediatra");
             case 4 -> medico.setEspecialidade("Oftalmo");
             case 5 -> medico.setEspecialidade("Psiquiatra");
             case 6 -> medico.setEspecialidade("Dermatologista");
@@ -85,10 +93,17 @@ public class Service {
             default -> {System.out.println("Digite uma opção válida"); this.especialidadeEscolhida = leitorEntrada.nextNum(); System.out.println("Você escolheu a especialidade "+ especialidadeEscolhida);}
         }
 
-        List<Integer> listaPlanosMedico = new ArrayList<>();
         this.leitorEntrada = new inputScanner();
+        List<String> nomesPlanos = Array.asList(
+            "Cassi",
+            "Amil",
+            "Porto Seguro",
+            "Unimed",
+            "Sulamerica",
+            "Bradesco Saúde",
+            "Saúde Caixa"
+        );
         List<String> planosAceitos = new ArrayList<>();
-        List<String> nomesPlanos = new ArrayList<>();
         System.out.println("Quais planos de saúde você atende?");
         System.out.println("Opções: ");
         System.out.println("0 -> Cassi");
@@ -110,6 +125,8 @@ public class Service {
             }
          }
          
+        medico.setPlanosAceitos(planosAceitos);
+
         this.leitorEntrada = new inputScanner();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
         System.out.println("Quantos horários deseja cadastrar como médico?");
@@ -118,6 +135,20 @@ public class Service {
         for (int i =0; i < quantidade; i++){
             System.out.println("Digite o dia disponível (Formato dd)");
             String horarioDisponivel = leitorEntrada.nextText();
+        leitorEntrada.nextEspaco();
+        
+        for (int z =0; z < quantidade; z++){
+            System.out.println("Digite a data disponível (Formato dd/MM/yyyy)");
+            String data = leitorEntrada.nextText();
+            System.out.println("Digite o horário disponível (Formato HH:mm)");
+            String hora = leitorEntrada.nextText();
+            try {
+                LocalDateTime horario = LocalDateTime.parse(data + " " + hora, formatter);
+                medico.adicionarHorarioDisponivel(horario);
+            }catch (Exception e) {
+                System.out.println("Horário inválido, tente novamente");
+                i--;}
+
 
             
         }
@@ -125,7 +156,7 @@ public class Service {
         System.out.println("Cadastro concluido com sucesso");
         medico.exibirDadosMedico();
         medicodaos.salvarMedico(medico);
-    }
+    }}
          
     public void menuPaciente(){
         this.leitorEntrada = new inputScanner();
@@ -227,14 +258,12 @@ public class Service {
             System.out.println("1 -> Consulta por Nome");
             System.out.println("2 -> Consultar por Crm");
             System.out.println("3 -> Consultar por Especialidade");
-            System.out.println("4 -> Consultar se Plano De Saúde é aceito");
             this.escolhaMedico = leitorEntrada.nextNum();
             switch(escolhaMedico){
                 case 0 -> medicodaos.listarMedicos();
                 case 1 -> medicodaos.buscaPorNomeMedico();
                 case 2 -> medicodaos.buscaPorCrm();
                 case 3 -> medicodaos.buscaPorEspecialidade();
-                case 4 -> medicodaos.buscaPorPlanoDeSaude();
                 default -> menuAdm();
             }
 
