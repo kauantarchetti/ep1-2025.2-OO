@@ -5,282 +5,329 @@ import DAOS.pacienteDAO;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
-
-
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Locale;
 
 public class Service {
-    
-    private inputScanner leitorEntrada;
+
+    private final inputScanner leitorEntrada = new inputScanner();
+    private final pacienteDAO pacienteDaos = new pacienteDAO();
+    private final medicoDAO medicoDaos = new medicoDAO();
+    private final AgendamentoConsultas agendamentoConsultas = new AgendamentoConsultas();
+    private final DateTimeFormatter dataHoraFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+    private final List<String> especialidades = Arrays.asList(
+        "Medico geral",
+        "Ortopedista",
+        "Cirurgiao",
+        "Pediatra",
+        "Oftalmo",
+        "Psiquiatra",
+        "Dermatologista",
+        "Cardiologista",
+        "Ginecologista",
+        "Urologista"
+    );
+    private final List<String> planos = Arrays.asList(
+        "Cassi",
+        "Amil",
+        "Porto Seguro",
+        "Unimed",
+        "Sulamerica",
+        "Bradesco Saude",
+        "Saude Caixa"
+    );
     private int opcao;
-    private int especialidadeEscolhida;
-    private int temPlanoDeSaudePaciente;
-    private int planoDeSaudePaciente;
-    private int escolhaMenu;
-    private int escolhaPaciente;
-    private int escolhaMedico;
-    private int entradaRegistroPlano;
-    private int querPlanoDeSaude;
-    private final Medico medico = new Medico();
-    private final Paciente paciente = new Paciente();
-    private final PlanoDeSaude planodesaude = new PlanoDeSaude();
-    pacienteDAO pacientedaos = new pacienteDAO();
-    medicoDAO medicodaos = new medicoDAO();
 
-    public void exibirMenu(){
-        System.out.println("== SISTEMA DE GERENCIAMENTO DE HOSPITALAR ==");
-        System.out.println("Opções:");
-        System.out.println("Aperte 0 se for um médico");
-        System.out.println("Aperte 1 se for um paciente");
-        System.out.println("Aperte 2 se for um ADM");
+    public void exibirMenu() {
+        System.out.println("== SISTEMA DE GERENCIAMENTO HOSPITALAR ==");
+        System.out.println("Opcoes:");
+        System.out.println("0 -> Medico");
+        System.out.println("1 -> Paciente");
+        System.out.println("2 -> ADM");
     }
-    
-    public void lerEntrada(){
-        this.leitorEntrada = new inputScanner();
+
+    public void lerEntrada() {
         this.opcao = leitorEntrada.nextNum();
-        System.out.println("Você escolheu a opção "+ opcao);
-        }
-
-    public void menuMedico(){
-        this.leitorEntrada = new inputScanner();
-        
-
-        System.out.println("=== Cadastro de médico ===");
-
-        System.out.println("Qual o seu nome?");
-        medico.setNome(leitorEntrada.nextText());
-
-        System.out.println("Qual o seu CRM?");
-        medico.setCrm(leitorEntrada.nextNum());
         leitorEntrada.nextEspaco();
-
-        System.out.println("Quanto custa sua consulta?");
-        medico.setCustoConsulta(leitorEntrada.nextNum());
-        leitorEntrada.nextEspaco();
-      
-        System.out.println("Qual a sua especialidade?");
-        System.out.println("Opções: ");
-        System.out.println("0 -> Médico geral");
-        System.out.println("1 -> Ortopedista");
-        System.out.println("2 -> Cirurgião");
-        System.out.println("3 -> Pediatra");
-        System.out.println("4 -> Oftalmo");
-        System.out.println("5 -> Psiquiatra");
-        System.out.println("6 -> Dermatologista");
-        System.out.println("7 -> Cardiologista");
-        System.out.println("8 -> Ginecologista");
-        System.out.println("9 -> Urologista");
-        while (true){
-            this.especialidadeEscolhida = leitorEntrada.nextNum();
-            if (especialidadeEscolhida >= 0 && especialidadeEscolhida <= 9){
-                break;
-            }
-            System.out.println("Digite uma opção válida");
-        }
-        System.out.println("Você escolheu a especialidade "+ especialidadeEscolhida);
-
-        switch(especialidadeEscolhida){
-            case 0 -> medico.setEspecialidade("Médico geral");
-            case 1 -> medico.setEspecialidade("Ortopedista");
-            case 2 -> medico.setEspecialidade("Cirurgião");
-            case 3 -> medico.setEspecialidade("Pediatra");
-            case 4 -> medico.setEspecialidade("Oftalmo");
-            case 5 -> medico.setEspecialidade("Psiquiatra");
-            case 6 -> medico.setEspecialidade("Dermatologista");
-            case 7 -> medico.setEspecialidade("Cardiologista");
-            case 8 -> medico.setEspecialidade("Ginecologista");
-            case 9 -> medico.setEspecialidade("Urologista");
-            default -> {System.out.println("Digite uma opção válida"); this.especialidadeEscolhida = leitorEntrada.nextNum(); System.out.println("Você escolheu a especialidade "+ especialidadeEscolhida);}
-        }
-
-        this.leitorEntrada = new inputScanner();
-        List<String> nomesPlanos = Array.asList(
-            "Cassi",
-            "Amil",
-            "Porto Seguro",
-            "Unimed",
-            "Sulamerica",
-            "Bradesco Saúde",
-            "Saúde Caixa"
-        );
-        List<String> planosAceitos = new ArrayList<>();
-        System.out.println("Quais planos de saúde você atende?");
-        System.out.println("Opções: ");
-        System.out.println("0 -> Cassi");
-        System.out.println("1 -> Amil");
-        System.out.println("2 -> Porto Seguro");
-        System.out.println("3 -> Unimed");
-        System.out.println("4 -> Sulamerica");
-        System.out.println("5 -> Bradesco Saúde");
-        System.out.println("6 -> Saúde Caixa");
-        System.out.println("Digite o 7 para parar");
-
-        while(true){
-            int valor = leitorEntrada.nextNum();
-            if (valor == 7) break;
-            if (valor >= 0  && valor < nomesPlanos.size()) {
-                planosAceitos.add(nomesPlanos.get(valor));
-            } else {
-                System.out.println("Opção Inválida, Tente Novamente");
-            }
-         }
-         
-        medico.setPlanosAceitos(planosAceitos);
-
-        this.leitorEntrada = new inputScanner();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
-        System.out.println("Quantos horários deseja cadastrar como médico?");
-        Integer quantidade = leitorEntrada.nextNum();
-
-        for (int i =0; i < quantidade; i++){
-            System.out.println("Digite o dia disponível (Formato dd)");
-            String horarioDisponivel = leitorEntrada.nextText();
-        leitorEntrada.nextEspaco();
-        
-        for (int z =0; z < quantidade; z++){
-            System.out.println("Digite a data disponível (Formato dd/MM/yyyy)");
-            String data = leitorEntrada.nextText();
-            System.out.println("Digite o horário disponível (Formato HH:mm)");
-            String hora = leitorEntrada.nextText();
-            try {
-                LocalDateTime horario = LocalDateTime.parse(data + " " + hora, formatter);
-                medico.adicionarHorarioDisponivel(horario);
-            }catch (Exception e) {
-                System.out.println("Horário inválido, tente novamente");
-                i--;}
-
-
-            
-        }
-        
-        System.out.println("Cadastro concluido com sucesso");
-        medico.exibirDadosMedico();
-        medicodaos.salvarMedico(medico);
-    }}
-         
-    public void menuPaciente(){
-        this.leitorEntrada = new inputScanner();
-        System.out.println("=== Cadastro de Paciente ===");
-
-        System.out.println("Tem plano de saúde?");
-        System.out.println("0 -> Sim");
-        System.out.println("1 -> Não");
-        this.temPlanoDeSaudePaciente = leitorEntrada.nextNum();
-        switch(temPlanoDeSaudePaciente){
-            case 0:
-                paciente.setTemRegistroPlano(true);
-                System.out.println("Qual seu plano de saúde?");
-                System.out.println("Opções: ");
-                System.out.println("0 -> Cassi");
-                System.out.println("1 -> Amil");
-                System.out.println("2 -> Porto Seguro");
-                System.out.println("3 -> Unimed");
-                System.out.println("4 -> Sulamerica");
-                System.out.println("5 -> Bradesco Saúde");
-                System.out.println("6 -> Saúde Caixa");
-                this.planoDeSaudePaciente = leitorEntrada.nextNum();
-                System.out.println("Você escolheu a opção: "+ planoDeSaudePaciente);
-                switch(planoDeSaudePaciente){
-                    case 0 -> planodesaude.setNome("Cassi");
-                    case 1 -> planodesaude.setNome("Amil");
-                    case 2 -> planodesaude.setNome("Porto Seguro");
-                    case 3 -> planodesaude.setNome("Unimed");
-                    case 4 -> planodesaude.setNome("Sulamerica");
-                    case 5 -> planodesaude.setNome("Bradesco Saúde");
-                    case 6 -> planodesaude.setNome("Saúde Caixa");
-                }
-                System.out.println("Qual o seu número de registro do plano?");
-                this.leitorEntrada = new inputScanner();
-                this.entradaRegistroPlano = leitorEntrada.nextNum();
-                leitorEntrada.nextEspaco();
-                break;
-                
-            case 1:
-            paciente.setTemRegistroPlano(false);
-            System.out.println("Deseja fazer um plano de saúde?");
-            System.out.println("0 -> Sim");
-            System.out.println("1 -> Não");
-            this.querPlanoDeSaude = leitorEntrada.nextNum();
-            leitorEntrada.nextEspaco();
-
-
-
-            default:
-            System.out.println("Digite uma opção válida");
-        }
-
-
-        
-        System.out.println("Qual o seu nome?");
-        paciente.setNome(leitorEntrada.nextText());
-
-        System.out.println("Qual o seu CPF?");
-        paciente.setCpf(leitorEntrada.nextText());
-
-        System.out.println("Qual é a sua idade?");
-        paciente.setIdade(leitorEntrada.nextNum());
-        leitorEntrada.nextEspaco();
-
-        pacientedaos.salvarPaciente(paciente);
-        
     }
 
-    public void menuAdm(){
-        System.out.println("== Menu ADM ==");
-        System.out.println("Escolha as configurações que deseja acessar: ");
-        System.out.println("Opções: ");
-        System.out.println("0 -> Configurações dos Pacientes");
-        System.out.println("1 -> Configurações dos Médicos");
-        this.leitorEntrada = new inputScanner();
-        this.escolhaMenu = leitorEntrada.nextNum();
-        switch(escolhaMenu){
-            case 0:
-            System.out.println("Entrou nas configurações de paciente");
-            System.out.println("Qual configuração deseja acessar: ");
-            System.out.println("Opções: ");
-            System.out.println("0 -> Listagem de Pacientes");
-            System.out.println("1 -> Consulta por Nome");
-            System.out.println("2 -> Consulta por Cpf");
-            System.out.println("3 -> Consulta por Plano de saúde");
-            this.escolhaPaciente = leitorEntrada.nextNum();
-            switch(escolhaPaciente){
-                case 0 -> System.out.println(pacientedaos.listarPaciente());
-                case 1 -> pacientedaos.buscaPorNome();
-                case 2 -> pacientedaos.buscaPorCpf();
-                case 3 -> pacientedaos.buscaPorPlanoDeSaude();
-                default -> System.out.println("Digite uma opção válida");
-            }
-            case 1:
-            System.out.println("Entrou nas configurações de médico");
-            System.out.println("Qual configuração deseja acessar: ");
-            System.out.println("Opções: ");
-            System.out.println("0 -> Listagem de Médicos");
-            System.out.println("1 -> Consulta por Nome");
-            System.out.println("2 -> Consultar por Crm");
-            System.out.println("3 -> Consultar por Especialidade");
-            this.escolhaMedico = leitorEntrada.nextNum();
-            switch(escolhaMedico){
-                case 0 -> medicodaos.listarMedicos();
-                case 1 -> medicodaos.buscaPorNomeMedico();
-                case 2 -> medicodaos.buscaPorCrm();
-                case 3 -> medicodaos.buscaPorEspecialidade();
-                default -> menuAdm();
-            }
-
-
-            default:
-            System.out.println("Digite uma opção válida");
-        }
-    }
-
-    public void escolherMenu(){
+    public void escolherMenu() {
         switch (opcao) {
             case 0 -> menuMedico();
             case 1 -> menuPaciente();
             case 2 -> menuAdm();
-            default -> System.out.println("Opção inválida");
+            default -> System.out.println("Opcao invalida");
         }
-    }   
     }
 
+    private void menuMedico() {
+        Medico medico = new Medico();
+        System.out.println("=== Cadastro de medico ===");
 
+        System.out.println("Nome:");
+        medico.setNome(leitorEntrada.nextText());
+
+        System.out.println("CRM:");
+        medico.setCrm(leitorEntrada.nextNum());
+        leitorEntrada.nextEspaco();
+
+        System.out.println("Valor da consulta:");
+        medico.setCustoConsulta(leitorEntrada.nextNum());
+        leitorEntrada.nextEspaco();
+
+        System.out.println("Escolha a especialidade:");
+        exibirOpcoes(especialidades);
+        int especialidadeIndice = lerIndiceValido(especialidades.size());
+        medico.setEspecialidade(especialidades.get(especialidadeIndice));
+
+        List<String> planosAceitos = new ArrayList<>();
+        System.out.println("Selecione os planos aceitos (digite 7 para encerrar):");
+        exibirPlanos();
+        while (true) {
+            int codigoPlano = leitorEntrada.nextNum();
+            leitorEntrada.nextEspaco();
+            if (codigoPlano == 7) {
+                break;
+            }
+            if (codigoPlano >= 0 && codigoPlano < planos.size()) {
+                String plano = planos.get(codigoPlano);
+                if (!planosAceitos.contains(plano)) {
+                    planosAceitos.add(plano);
+                    System.out.println("Plano adicionado: " + plano);
+                } else {
+                    System.out.println("Plano ja adicionado.");
+                }
+            } else {
+                System.out.println("Opcao invalida, tente novamente.");
+            }
+        }
+        medico.setPlanosAceitos(planosAceitos);
+
+        System.out.println("Quantos horarios deseja cadastrar?");
+        int quantidade = leitorEntrada.nextNum();
+        leitorEntrada.nextEspaco();
+        for (int i = 1; i <= quantidade; i++) {
+            LocalDateTime horario = lerHorarioDisponivel(i);
+            if (!medico.getAgendaHorario().contains(horario)) {
+                medico.adicionarHorarioDisponivel(horario);
+            } else {
+                System.out.println("Horario duplicado ignorado.");
+            }
+        }
+
+        medicoDaos.salvarMedico(medico);
+        System.out.println("Medico cadastrado com sucesso.");
+    }
+
+    private void menuPaciente() {
+        System.out.println("=== Cadastro de paciente ===");
+        Paciente paciente;
+
+        System.out.println("Possui plano de saude?");
+        System.out.println("0 -> Sim");
+        System.out.println("1 -> Nao");
+        int temPlano;
+        while (true) {
+            temPlano = leitorEntrada.nextNum();
+            leitorEntrada.nextEspaco();
+            if (temPlano == 0 || temPlano == 1) {
+                break;
+            }
+            System.out.println("Opcao invalida, tente novamente.");
+        }
+
+        if (temPlano == 0) {
+            PacienteEspecial pacienteEspecial = new PacienteEspecial();
+            pacienteEspecial.setTemRegistroPlano(true);
+            System.out.println("Selecione o plano de saude:");
+            exibirPlanos();
+            int planoIndice = lerIndiceValido(planos.size());
+            pacienteEspecial.setNomePlanoDeSaude(planos.get(planoIndice));
+            System.out.println("Informe o numero do registro do plano:");
+            pacienteEspecial.setNumeroRegistroPlano(leitorEntrada.nextNum());
+            leitorEntrada.nextEspaco();
+            paciente = pacienteEspecial;
+        } else {
+            PacienteComum pacienteComum = new PacienteComum();
+            pacienteComum.setTemRegistroPlano(false);
+            pacienteComum.setNomePlanoDeSaude("");
+            paciente = pacienteComum;
+        }
+
+        System.out.println("Nome:");
+        paciente.setNome(leitorEntrada.nextText());
+
+        System.out.println("CPF:");
+        paciente.setCpf(leitorEntrada.nextText());
+
+        System.out.println("Idade:");
+        paciente.setIdade(leitorEntrada.nextNum());
+        leitorEntrada.nextEspaco();
+
+        pacienteDaos.salvarPaciente(paciente);
+        System.out.println("Paciente cadastrado com sucesso.");
+
+        oferecerAgendamentoParaPaciente(paciente);
+    }
+
+    private void menuAdm() {
+        System.out.println("== Menu ADM ==");
+        System.out.println("Escolha a opcao desejada:");
+        System.out.println("0 -> Configuracoes de pacientes");
+        System.out.println("1 -> Configuracoes de medicos");
+        int escolha = leitorEntrada.nextNum();
+        leitorEntrada.nextEspaco();
+
+        switch (escolha) {
+            case 0 -> menuAdmPacientes();
+            case 1 -> menuAdmMedicos();
+            default -> System.out.println("Opcao invalida");
+        }
+    }
+
+    private void menuAdmPacientes() {
+        System.out.println("Opcoes:");
+        System.out.println("0 -> Listar pacientes");
+        System.out.println("1 -> Buscar por nome");
+        System.out.println("2 -> Buscar por CPF");
+        System.out.println("3 -> Buscar por plano de saude");
+        int escolha = leitorEntrada.nextNum();
+        leitorEntrada.nextEspaco();
+        switch (escolha) {
+            case 0 -> System.out.println(pacienteDaos.listarPaciente());
+            case 1 -> pacienteDaos.buscaPorNome();
+            case 2 -> pacienteDaos.buscaPorCpf();
+            case 3 -> pacienteDaos.buscaPorPlanoDeSaude();
+            default -> System.out.println("Opcao invalida");
+        }
+    }
+
+    private void menuAdmMedicos() {
+        System.out.println("Opcoes:");
+        System.out.println("0 -> Listar medicos");
+        System.out.println("1 -> Buscar por nome");
+        System.out.println("2 -> Buscar por CRM");
+        System.out.println("3 -> Buscar por especialidade");
+        System.out.println("4 -> Buscar por plano aceito");
+        int escolha = leitorEntrada.nextNum();
+        leitorEntrada.nextEspaco();
+        switch (escolha) {
+            case 0 -> listarMedicosCadastrados();
+            case 1 -> medicoDaos.buscaPorNomeMedico();
+            case 2 -> medicoDaos.buscaPorCrm();
+            case 3 -> medicoDaos.buscaPorEspecialidade();
+            case 4 -> medicoDaos.buscaPorPlanoAceito();
+            default -> System.out.println("Opcao invalida");
+        }
+    }
+
+    private void oferecerAgendamentoParaPaciente(Paciente paciente) {
+        System.out.println("Deseja agendar uma consulta agora?");
+        System.out.println("0 -> Sim");
+        System.out.println("1 -> Nao");
+        int resposta = leitorEntrada.nextNum();
+        leitorEntrada.nextEspaco();
+        if (resposta != 0) {
+            return;
+        }
+
+        List<Medico> medicos = medicoDaos.listarMedicos();
+        if (medicos.isEmpty()) {
+            System.out.println("Nao ha medicos cadastrados no momento.");
+            return;
+        }
+
+        System.out.println("Selecione o medico desejado:");
+        for (int i = 0; i < medicos.size(); i++) {
+            Medico m = medicos.get(i);
+            System.out.println(i + " -> " + m.getNome() + " | CRM " + m.getCrm() + " | " + m.getEspecialidade());
+        }
+        int indiceMedico = lerIndiceValido(medicos.size());
+        Medico medicoSelecionado = medicos.get(indiceMedico);
+
+        List<LocalDateTime> horariosDisponiveis = new ArrayList<>(medicoSelecionado.getAgendaHorario());
+        horariosDisponiveis.sort(Comparator.naturalOrder());
+        if (horariosDisponiveis.isEmpty()) {
+            System.out.println("O medico escolhido nao possui horarios cadastrados.");
+            return;
+        }
+
+        System.out.println("Selecione o horario:");
+        for (int i = 0; i < horariosDisponiveis.size(); i++) {
+            System.out.println(i + " -> " + horariosDisponiveis.get(i).format(dataHoraFormatter));
+        }
+        int indiceHorario = lerIndiceValido(horariosDisponiveis.size());
+        LocalDateTime dataHora = horariosDisponiveis.get(indiceHorario);
+
+        System.out.println("Informe o local da consulta:");
+        String local = leitorEntrada.nextText();
+
+        try {
+            Consulta consulta = agendamentoConsultas.agendarConsulta(paciente, medicoSelecionado, dataHora, local);
+            System.out.println("Consulta agendada com sucesso!");
+            System.out.println("Codigo: " + consulta.getId());
+            System.out.println("Medico: " + medicoSelecionado.getNome() + " (CRM " + medicoSelecionado.getCrm() + ")");
+            System.out.println("Data e hora: " + dataHora.format(dataHoraFormatter));
+            System.out.println("Local: " + consulta.getLocal());
+            System.out.println("Status: " + consulta.getStatus());
+            System.out.println("Valor final: R$ " + formatValor(consulta.getValorFinal())
+                + " (desconto " + Math.round(consulta.getDescontoPercentual() * 100) + "%)");
+        } catch (RuntimeException e) {
+            System.out.println("Nao foi possivel agendar a consulta: " + e.getMessage());
+        }
+    }
+
+    private void listarMedicosCadastrados() {
+        List<Medico> medicos = medicoDaos.listarMedicos();
+        if (medicos.isEmpty()) {
+            System.out.println("Nenhum medico cadastrado.");
+            return;
+        }
+        for (Medico medico : medicos) {
+            System.out.println(medico);
+        }
+    }
+
+    private void exibirOpcoes(List<String> opcoes) {
+        for (int i = 0; i < opcoes.size(); i++) {
+            System.out.println(i + " -> " + opcoes.get(i));
+        }
+    }
+
+    private void exibirPlanos() {
+        exibirOpcoes(planos);
+        System.out.println("7 -> Finalizar selecao");
+    }
+
+    private int lerIndiceValido(int limite) {
+        while (true) {
+            int valor = leitorEntrada.nextNum();
+            leitorEntrada.nextEspaco();
+            if (valor >= 0 && valor < limite) {
+                return valor;
+            }
+            System.out.println("Opcao invalida, tente novamente.");
+        }
+    }
+
+    private LocalDateTime lerHorarioDisponivel(int ordem) {
+        while (true) {
+            System.out.println("Digite a data do horario " + ordem + " (formato dd/MM/yyyy):");
+            String data = leitorEntrada.nextText();
+            System.out.println("Digite a hora do horario " + ordem + " (formato HH:mm):");
+            String hora = leitorEntrada.nextText();
+            try {
+                return LocalDateTime.parse(data + " " + hora, dataHoraFormatter);
+            } catch (RuntimeException e) {
+                System.out.println("Horario invalido, tente novamente.");
+            }
+        }
+    }
+
+    private String formatValor(double valor) {
+        return String.format(Locale.US, "%.2f", valor);
+    }
+}

@@ -10,7 +10,7 @@ import entidades.inputScanner;
 
 public class pacienteDAO {  
     private static final String FILE_NAME = "pacientes.json";
-    private Gson gson = new Gson();
+    private final Gson gson = new Gson();
     private inputScanner entrada;
 
     public void salvarPaciente(Paciente paciente){
