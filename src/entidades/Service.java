@@ -60,10 +60,18 @@ public class Service {
 
     public void escolherMenu() {
         switch (opcao) {
-            case 0 -> menuMedico();
-            case 1 -> menuPaciente();
-            case 2 -> menuAdm();
-            default -> System.out.println("Opcao invalida");
+            case 0:
+                menuMedico();
+                break;
+            case 1:
+                menuPaciente();
+                break;
+            case 2:
+                menuAdm();
+                break;
+            default:
+                System.out.println("Opcao invalida");
+                break;
         }
     }
 
@@ -190,10 +198,18 @@ public class Service {
         leitorEntrada.nextEspaco();
 
         switch (escolha) {
-            case 0 -> menuAdmPacientes();
-            case 1 -> menuAdmMedicos();
-            case 2 -> menuAdmInternacoes();
-            default -> System.out.println("Opcao invalida");
+            case 0:
+                menuAdmPacientes();
+                break;
+            case 1:
+                menuAdmMedicos();
+                break;
+            case 2:
+                menuAdmInternacoes();
+                break;
+            default:
+                System.out.println("Opcao invalida");
+                break;
         }
     }
 
@@ -206,11 +222,21 @@ public class Service {
         int escolha = leitorEntrada.nextNum();
         leitorEntrada.nextEspaco();
         switch (escolha) {
-            case 0 -> System.out.println(pacienteDaos.listarPaciente());
-            case 1 -> pacienteDaos.buscaPorNome();
-            case 2 -> pacienteDaos.buscaPorCpf();
-            case 3 -> pacienteDaos.buscaPorPlanoDeSaude();
-            default -> System.out.println("Opcao invalida");
+            case 0:
+                System.out.println(pacienteDaos.listarPaciente());
+                break;
+            case 1:
+                pacienteDaos.buscaPorNome();
+                break;
+            case 2:
+                pacienteDaos.buscaPorCpf();
+                break;
+            case 3:
+                pacienteDaos.buscaPorPlanoDeSaude();
+                break;
+            default:
+                System.out.println("Opcao invalida");
+                break;
         }
     }
 
@@ -224,12 +250,24 @@ public class Service {
         int escolha = leitorEntrada.nextNum();
         leitorEntrada.nextEspaco();
         switch (escolha) {
-            case 0 -> listarMedicosCadastrados();
-            case 1 -> medicoDaos.buscaPorNomeMedico();
-            case 2 -> medicoDaos.buscaPorCrm();
-            case 3 -> medicoDaos.buscaPorEspecialidade();
-            case 4 -> medicoDaos.buscaPorPlanoAceito();
-            default -> System.out.println("Opcao invalida");
+            case 0:
+                listarMedicosCadastrados();
+                break;
+            case 1:
+                medicoDaos.buscaPorNomeMedico();
+                break;
+            case 2:
+                medicoDaos.buscaPorCrm();
+                break;
+            case 3:
+                medicoDaos.buscaPorEspecialidade();
+                break;
+            case 4:
+                medicoDaos.buscaPorPlanoAceito();
+                break;
+            default:
+                System.out.println("Opcao invalida");
+                break;
         }
     }
 
@@ -243,8 +281,10 @@ public class Service {
             leitorEntrada.nextEspaco();
             if (escolha == 2) return;
             switch (escolha) {
-                case 0 -> listarConsultasPaciente(paciente.getCpf());
-                case 1 -> {
+                case 0:
+                    listarConsultasPaciente(paciente.getCpf());
+                    break;
+                case 1: {
                     listarConsultasPaciente(paciente.getCpf());
                     System.out.println("Informe o codigo (ID) da consulta a cancelar:");
                     String id = leitorEntrada.nextText();
@@ -254,8 +294,11 @@ public class Service {
                     } catch (RuntimeException e) {
                         System.out.println("Falha ao cancelar: " + e.getMessage());
                     }
+                    break;
                 }
-                default -> System.out.println("Opcao invalida");
+                default:
+                    System.out.println("Opcao invalida");
+                    break;
             }
         }
     }
@@ -271,8 +314,10 @@ public class Service {
             leitorEntrada.nextEspaco();
             if (escolha == 3) return;
             switch (escolha) {
-                case 0 -> listarConsultasMedico(crm);
-                case 1 -> {
+                case 0:
+                    listarConsultasMedico(crm);
+                    break;
+                case 1: {
                     listarConsultasMedico(crm);
                     System.out.println("Informe o codigo (ID) da consulta a cancelar:");
                     String id = leitorEntrada.nextText();
@@ -282,8 +327,9 @@ public class Service {
                     } catch (RuntimeException e) {
                         System.out.println("Falha ao cancelar: " + e.getMessage());
                     }
+                    break;
                 }
-                case 2 -> {
+                case 2: {
                     listarConsultasMedico(crm);
                     System.out.println("Informe o codigo (ID) da consulta a concluir:");
                     String id = leitorEntrada.nextText();
@@ -297,8 +343,11 @@ public class Service {
                     } catch (RuntimeException e) {
                         System.out.println("Falha ao concluir: " + e.getMessage());
                     }
+                    break;
                 }
-                default -> System.out.println("Opcao invalida");
+                default:
+                    System.out.println("Opcao invalida");
+                    break;
             }
         }
     }
@@ -395,12 +444,24 @@ public class Service {
         Integer localInteger = leitorEntrada.nextNum();
         leitorEntrada.nextEspaco();
         switch (localInteger) {
-            case 0 -> setLocal("Hospital Brasília");
-            case 1 -> setLocal("Hospital DF Star");
-            case 2 -> setLocal("Hospital Santa Luzia");
-            case 3 -> setLocal("Hospital Santa Marta");
-            case 4 -> setLocal("Hospital HOME");
-            default -> System.out.println("Digite uma opção válida");
+            case 0: 
+            setLocal("Hospital Brasília");
+            break;
+            case 1:
+            setLocal("Hospital DF Star");
+            break;
+            case 2:
+            setLocal("Hospital Santa Luzia");
+            break;
+            case 3:
+            setLocal("Hospital Santa Marta");
+            break;
+            case 4:
+            setLocal("Hospital HOME");
+            break;
+            default:
+            System.out.println("Digite uma opção válida");
+            break;
         }
 
         try {
@@ -487,11 +548,21 @@ public class Service {
             leitorEntrada.nextEspaco();
             if (escolha == 4) return;
             switch (escolha) {
-                case 0 -> cadastrarInternacao();
-                case 1 -> listarInternacoes();
-                case 2 -> darAltaInternacao();
-                case 3 -> cancelarInternacao();
-                default -> System.out.println("Opcao invalida");
+                case 0:
+                    cadastrarInternacao();
+                    break;
+                case 1:
+                    listarInternacoes();
+                    break;
+                case 2:
+                    darAltaInternacao();
+                    break;
+                case 3:
+                    cancelarInternacao();
+                    break;
+                default:
+                    System.out.println("Opcao invalida");
+                    break;
             }
         }
     }

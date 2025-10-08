@@ -101,17 +101,32 @@ public class pacienteDAO {
         System.out.println("6 -> Saúde Caixa");
         Integer planoDeSaudePacienteNum = entrada.nextNum();
         switch(planoDeSaudePacienteNum){
-            case 0 -> planoDeSaudePacienteText = "Cassi";
-            case 1 -> planoDeSaudePacienteText = "Amil";
-            case 2 -> planoDeSaudePacienteText = "Porto Seguro";
-            case 3 -> planoDeSaudePacienteText = "Unimed";
-            case 4 -> planoDeSaudePacienteText = "Sulamerica";
-            case 5 -> planoDeSaudePacienteText = "Bradesco Saúde";
-            case 6 -> planoDeSaudePacienteText = "Saúde Caixa";
-            default -> {
+            case 0:
+                planoDeSaudePacienteText = "Cassi";
+                break;
+            case 1:
+                planoDeSaudePacienteText = "Amil";
+                break;
+            case 2:
+                planoDeSaudePacienteText = "Porto Seguro";
+                break;
+            case 3:
+                planoDeSaudePacienteText = "Unimed";
+                break;
+            case 4:
+                planoDeSaudePacienteText = "Sulamerica";
+                break;
+            case 5:
+                planoDeSaudePacienteText = "Bradesco Saúde";
+                break;
+            case 6:
+                planoDeSaudePacienteText = "Saúde Caixa";
+                break;
+            default:
+                {
                 System.out.println("Digite um número válido");
                 return;
-            }
+                }
         }
         boolean encontrou = false;
         for (Paciente paciente: listarPaciente()){
