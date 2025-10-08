@@ -134,8 +134,8 @@ public class consultaDAO {
         boolean alterou = false;
         for (ConsultaRegistro r : lista) {
             if (r.id.equals(id)) {
-                r.diagnostico = (diagnostico == null || diagnostico.isBlank()) ? null : diagnostico;
-                r.prescricao = (prescricao == null || prescricao.isBlank()) ? null : prescricao;
+                r.diagnostico = (diagnostico == null || diagnostico.trim().isEmpty()) ? null : diagnostico;
+                r.prescricao = (prescricao == null || prescricao.trim().isEmpty()) ? null : prescricao;
                 r.status = StatusConsulta.CONCLUIDA;
                 alterou = true;
                 break;

@@ -199,10 +199,10 @@ public class AgendamentoConsultas {
         sb.append("Conclusao da consulta em ").append(dataHora)
           .append(" | Medico: ").append(nomeMedico).append(" (CRM ").append(crm).append(")")
           .append(" | Local: ").append(local);
-        if (diagnostico != null && !diagnostico.isBlank()) {
+        if (diagnostico != null && !diagnostico.trim().isEmpty()) {
             sb.append(" | Diagnostico: ").append(diagnostico);
         }
-        if (prescricao != null && !prescricao.isBlank()) {
+        if (prescricao != null && !prescricao.trim().isEmpty()) {
             sb.append(" | Prescricao: ").append(prescricao);
         }
         return sb.toString();

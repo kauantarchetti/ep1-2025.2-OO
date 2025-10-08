@@ -363,10 +363,10 @@ public class Service {
                 + r.dataHora.format(dataHoraFormatter) + " | Local: " + r.local + " | Status: " + r.status
                 + " | Valor: R$ " + formatValor(r.valorFinal);
             if (r.status == StatusConsulta.CONCLUIDA) {
-                if (r.diagnostico != null && !r.diagnostico.isBlank()) {
+                if (r.diagnostico != null && !r.diagnostico.trim().isEmpty()) {
                     base += " | Diagnostico: " + r.diagnostico;
                 }
-                if (r.prescricao != null && !r.prescricao.isBlank()) {
+                if (r.prescricao != null && !r.prescricao.trim().isEmpty()) {
                     base += " | Prescricao: " + r.prescricao;
                 }
             }
@@ -385,10 +385,10 @@ public class Service {
                 + r.dataHora.format(dataHoraFormatter) + " | Local: " + r.local + " | Status: " + r.status
                 + " | Valor: R$ " + formatValor(r.valorFinal);
             if (r.status == StatusConsulta.CONCLUIDA) {
-                if (r.diagnostico != null && !r.diagnostico.isBlank()) {
+                if (r.diagnostico != null && !r.diagnostico.trim().isEmpty()) {
                     base += " | Diagnostico: " + r.diagnostico;
                 }
-                if (r.prescricao != null && !r.prescricao.isBlank()) {
+                if (r.prescricao != null && !r.prescricao.trim().isEmpty()) {
                     base += " | Prescricao: " + r.prescricao;
                 }
             }
