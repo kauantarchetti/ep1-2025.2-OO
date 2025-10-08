@@ -1,8 +1,8 @@
 package entidades;
 
+import DAOS.consultaDAO;
 import DAOS.medicoDAO;
 import DAOS.pacienteDAO;
-
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -16,8 +16,10 @@ public class Service {
     private final inputScanner leitorEntrada = new inputScanner();
     private final pacienteDAO pacienteDaos = new pacienteDAO();
     private final medicoDAO medicoDaos = new medicoDAO();
+    private final consultaDAO consultaDaos = new consultaDAO();
     private final AgendamentoConsultas agendamentoConsultas = new AgendamentoConsultas();
     private final DateTimeFormatter dataHoraFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+    private String local;
     private final List<String> especialidades = Arrays.asList(
         "Medico geral",
         "Ortopedista",
@@ -98,7 +100,7 @@ public class Service {
                     planosAceitos.add(plano);
                     System.out.println("Plano adicionado: " + plano);
                 } else {
-                    System.out.println("Plano ja adicionado.");
+                    System.out.println("Plano já adicionado.");
                 }
             } else {
                 System.out.println("Opcao invalida, tente novamente.");
@@ -120,6 +122,8 @@ public class Service {
 
         medicoDaos.salvarMedico(medico);
         System.out.println("Medico cadastrado com sucesso.");
+
+        gerenciarConsultasMedico(medico.getCrm());
     }
 
     private void menuPaciente() {
@@ -171,6 +175,7 @@ public class Service {
         System.out.println("Paciente cadastrado com sucesso.");
 
         oferecerAgendamentoParaPaciente(paciente);
+        gerenciarConsultasPaciente(paciente);
     }
 
     private void menuAdm() {
@@ -224,6 +229,120 @@ public class Service {
         }
     }
 
+    private void gerenciarConsultasPaciente(Paciente paciente) {
+        while (true) {
+            System.out.println("== Consultas do paciente ==");
+            System.out.println("0 -> Listar minhas consultas");
+            System.out.println("1 -> Cancelar uma consulta por ID");
+            System.out.println("2 -> Voltar");
+            int escolha = leitorEntrada.nextNum();
+            leitorEntrada.nextEspaco();
+            if (escolha == 2) return;
+            switch (escolha) {
+                case 0 -> listarConsultasPaciente(paciente.getCpf());
+                case 1 -> {
+                    listarConsultasPaciente(paciente.getCpf());
+                    System.out.println("Informe o codigo (ID) da consulta a cancelar:");
+                    String id = leitorEntrada.nextText();
+                    try {
+                        agendamentoConsultas.atualizarStatus(id, StatusConsulta.CANCELADA);
+                        System.out.println("Consulta cancelada.");
+                    } catch (RuntimeException e) {
+                        System.out.println("Falha ao cancelar: " + e.getMessage());
+                    }
+                }
+                default -> System.out.println("Opcao invalida");
+            }
+        }
+    }
+
+    private void gerenciarConsultasMedico(int crm) {
+        while (true) {
+            System.out.println("== Consultas do medico ==");
+            System.out.println("0 -> Listar minhas consultas");
+            System.out.println("1 -> Cancelar uma consulta por ID");
+            System.out.println("2 -> Concluir uma consulta por ID");
+            System.out.println("3 -> Voltar");
+            int escolha = leitorEntrada.nextNum();
+            leitorEntrada.nextEspaco();
+            if (escolha == 3) return;
+            switch (escolha) {
+                case 0 -> listarConsultasMedico(crm);
+                case 1 -> {
+                    listarConsultasMedico(crm);
+                    System.out.println("Informe o codigo (ID) da consulta a cancelar:");
+                    String id = leitorEntrada.nextText();
+                    try {
+                        agendamentoConsultas.atualizarStatus(id, StatusConsulta.CANCELADA);
+                        System.out.println("Consulta cancelada.");
+                    } catch (RuntimeException e) {
+                        System.out.println("Falha ao cancelar: " + e.getMessage());
+                    }
+                }
+                case 2 -> {
+                    listarConsultasMedico(crm);
+                    System.out.println("Informe o codigo (ID) da consulta a concluir:");
+                    String id = leitorEntrada.nextText();
+                    System.out.println("Digite o diagnostico (ou deixe em branco):");
+                    String diag = leitorEntrada.nextText();
+                    System.out.println("Digite a prescricao (ou deixe em branco):");
+                    String presc = leitorEntrada.nextText();
+                    try {
+                        agendamentoConsultas.concluirConsulta(id, diag, presc);
+                        System.out.println("Consulta concluida com sucesso.");
+                    } catch (RuntimeException e) {
+                        System.out.println("Falha ao concluir: " + e.getMessage());
+                    }
+                }
+                default -> System.out.println("Opcao invalida");
+            }
+        }
+    }
+
+    private void listarConsultasPaciente(String cpf) {
+        List<consultaDAO.ConsultaRegistro> registros = consultaDaos.listarPorPacienteCpf(cpf);
+        if (registros.isEmpty()) {
+            System.out.println("Nenhuma consulta encontrada.");
+            return;
+        }
+        for (consultaDAO.ConsultaRegistro r : registros) {
+            String base = r.id + " | Medico: " + r.nomeMedico + " (CRM " + r.crmMedico + ") | "
+                + r.dataHora.format(dataHoraFormatter) + " | Local: " + r.local + " | Status: " + r.status
+                + " | Valor: R$ " + formatValor(r.valorFinal);
+            if (r.status == StatusConsulta.CONCLUIDA) {
+                if (r.diagnostico != null && !r.diagnostico.isBlank()) {
+                    base += " | Diagnostico: " + r.diagnostico;
+                }
+                if (r.prescricao != null && !r.prescricao.isBlank()) {
+                    base += " | Prescricao: " + r.prescricao;
+                }
+            }
+            System.out.println(base);
+        }
+    }
+
+    private void listarConsultasMedico(int crm) {
+        List<consultaDAO.ConsultaRegistro> registros = consultaDaos.listarPorMedicoCrm(crm);
+        if (registros.isEmpty()) {
+            System.out.println("Nenhuma consulta encontrada.");
+            return;
+        }
+        for (consultaDAO.ConsultaRegistro r : registros) {
+            String base = r.id + " | Paciente: " + r.nomePaciente + " (CPF " + r.cpfPaciente + ") | "
+                + r.dataHora.format(dataHoraFormatter) + " | Local: " + r.local + " | Status: " + r.status
+                + " | Valor: R$ " + formatValor(r.valorFinal);
+            if (r.status == StatusConsulta.CONCLUIDA) {
+                if (r.diagnostico != null && !r.diagnostico.isBlank()) {
+                    base += " | Diagnostico: " + r.diagnostico;
+                }
+                if (r.prescricao != null && !r.prescricao.isBlank()) {
+                    base += " | Prescricao: " + r.prescricao;
+                }
+            }
+            System.out.println(base);
+        }
+    }
+
     private void oferecerAgendamentoParaPaciente(Paciente paciente) {
         System.out.println("Deseja agendar uma consulta agora?");
         System.out.println("0 -> Sim");
@@ -263,7 +382,22 @@ public class Service {
         LocalDateTime dataHora = horariosDisponiveis.get(indiceHorario);
 
         System.out.println("Informe o local da consulta:");
-        String local = leitorEntrada.nextText();
+        System.out.println("Locais Disponíveis: ");
+        System.out.println("0 -> Hospital Brasília");
+        System.out.println("1 -> Hospital DF Star");
+        System.out.println("2 -> Hospital Santa Luzia");
+        System.out.println("3 -> Hospital Santa Marta");
+        System.out.println("4 -> Hospital HOME");
+        Integer localInteger = leitorEntrada.nextNum();
+        leitorEntrada.nextEspaco();
+        switch (localInteger) {
+            case 0 -> setLocal("Hospital Brasília");
+            case 1 -> setLocal("Hospital DF Star");
+            case 2 -> setLocal("Hospital Santa Luzia");
+            case 3 -> setLocal("Hospital Santa Marta");
+            case 4 -> setLocal("Hospital HOME");
+            default -> System.out.println("Digite uma opção válida");
+        }
 
         try {
             Consulta consulta = agendamentoConsultas.agendarConsulta(paciente, medicoSelecionado, dataHora, local);
@@ -278,6 +412,10 @@ public class Service {
         } catch (RuntimeException e) {
             System.out.println("Nao foi possivel agendar a consulta: " + e.getMessage());
         }
+    }
+
+    private Object setLocal(String string) {
+        throw new UnsupportedOperationException("Unimplemented method 'setLocal'");
     }
 
     private void listarMedicosCadastrados() {

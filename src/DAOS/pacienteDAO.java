@@ -24,6 +24,29 @@ public class pacienteDAO {
         }
     }
 
+    public boolean atualizarHistoricoConsulta(String cpf, String entradaHistorico){
+        List<Paciente> pacientes = listarPaciente();
+        boolean alterou = false;
+        for(Paciente p : pacientes){
+            if(p.getCpf() != null && p.getCpf().equals(cpf)){
+                if(p.getHistoricoConsultas() == null){
+                    p.setHistoricoConsultas(new java.util.ArrayList<>());
+                }
+                p.getHistoricoConsultas().add(entradaHistorico);
+                alterou = true;
+                break;
+            }
+        }
+        if(alterou){
+            try (FileWriter writer = new FileWriter(FILE_NAME)) {
+                gson.toJson(pacientes, writer);
+            } catch (IOException e) {
+                System.out.println("Erro ao atualizar historico do paciente: " + e.getMessage());
+            }
+        }
+        return alterou;
+    }
+
     public List<Paciente> listarPaciente(){
         try (Reader reader = new FileReader(FILE_NAME)){
             Type pacienteListType = new TypeToken<List<Paciente>>() {}.getType();

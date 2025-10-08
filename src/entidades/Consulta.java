@@ -9,11 +9,13 @@ public class Consulta {
     private final Paciente paciente;
     private final Medico medico;
     private final LocalDateTime dataHora;
-    private final String local;
+    private String local;
     private StatusConsulta status;
     private final double valorBase;
     private final double descontoPercentual;
     private final double valorFinal;
+    private String diagnostico;
+    private String prescricao;
 
     Consulta(Paciente paciente, Medico medico, LocalDateTime dataHora, String local, double descontoPercentual) {
         this.id = UUID.randomUUID().toString();
@@ -51,6 +53,10 @@ public class Consulta {
         return local;
     }
 
+    public void setLocal(String local){
+        this.local = local;
+    }
+
     public StatusConsulta getStatus() {
         return status;
     }
@@ -73,5 +79,19 @@ public class Consulta {
 
     boolean isAtiva() {
         return status == StatusConsulta.AGENDADA;
+    }
+
+    public String getDiagnostico() {
+        return diagnostico;
+    }
+
+    public String getPrescricao() {
+        return prescricao;
+    }
+
+    public void concluir(String diagnostico, String prescricao) {
+        this.diagnostico = (diagnostico == null ? null : diagnostico.trim());
+        this.prescricao = (prescricao == null ? null : prescricao.trim());
+        atualizarStatus(StatusConsulta.CONCLUIDA);
     }
 }
